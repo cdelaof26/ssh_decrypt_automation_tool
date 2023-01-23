@@ -3,7 +3,7 @@ import tools.app_data as app_data
 import tools.ios_app as ios_apps
 import paramiko
 import socket
-from tools.utils import choose, clear_terminal
+from tools.utils import choose, clear_terminal, write_binary_file, read_plist_file
 from paramiko.channel import ChannelFile
 from socket import gaierror
 from time import sleep
@@ -23,7 +23,7 @@ def connect(ip: str, username: str, password: str) -> paramiko.SSHClient:
 
 
 def disconnect(client: paramiko.SSHClient):
-    print("Closing connection... ", end="")
+    print("Closing connection... ", end="", flush=True)
     if client:
         sleep(5)
         client.close()
@@ -92,7 +92,7 @@ def setup_connection(ask_to_setup_new_idevice=True) -> list:
                 password = input("> ")
 
         try:
-            print("\nTrying connection... ", end="")
+            print("\nTrying connection... ", end="", flush=True)
             client = connect(ip, username, password)
         except socket.timeout:
             print("Time out!")
@@ -164,17 +164,7 @@ def list_bundle_ids(client: paramiko.SSHClient) -> list:
 
     output = read_output(ssh_stdout)
 
-    return bm.prepare_paths(output)
-
-
-def retrieve_internal_app_names(client: paramiko.SSHClient, listed_bundles: list):
-    for bundle in listed_bundles:
-        ssh_stdin, ssh_stdout, ssh_stderr = client.exec_command(f"cd {bundle.host_plist_path}; ls")
-        output = read_output(ssh_stdout)
-        name = bm.find_app_internal_name(output)
-
-        bundle.app_internal_name = name
-        bundle.host_plist_path += f"{name}/Info.plist"
+    return bm.find_metadata_plist(output)
 
 
 def retrieve_apps_plists(client: paramiko.SSHClient, listed_applications: list):
@@ -189,7 +179,8 @@ def retrieve_apps_plists(client: paramiko.SSHClient, listed_applications: list):
             continue
 
         try:
-            sftp_client.get(app.host_plist_path, str(app.local_plist_path))
+            remote_file = sftp_client.open(app.host_plist_path, "rb")
+            write_binary_file(app.local_plist_path, remote_file.read())
         except FileNotFoundError:
             pass
 
@@ -207,19 +198,21 @@ def retrieve_apps_names(client: paramiko.SSHClient, listed_applications: list):
             app.local_plist_path = ios_apps.LOCAL_CACHE_DIR.joinpath(app.bundle_id + ".plist")
 
     for app in listed_applications:
-        properties = bm.find_properties(app.local_plist_path)
+        plist_data = read_plist_file(app.local_plist_path)
+        if not plist_data:
+            continue
+
         try:
-            app.app_name = properties["app_name"]
-            app.app_bundle = properties["app_bundle"]
-            app.app_version = properties["app_version"]
+            app.app_name = plist_data["itemName"]
+            app.app_bundle = plist_data["softwareVersionBundleId"]
+            app.app_version = plist_data["bundleShortVersionString"]
         except KeyError:
-            pass
+            continue
 
 
 def list_apps(client: paramiko.SSHClient) -> list:
-    print("\nListing apps... ", end="")
+    print("\nListing apps... ", end="", flush=True)
     listed_applications = list_bundle_ids(client)
-    retrieve_internal_app_names(client, listed_applications)
     retrieve_apps_names(client, listed_applications)
     print("Done")
 
@@ -259,18 +252,18 @@ def download_app(client: paramiko.SSHClient, app: ios_apps.AppInfo, ipa_path: st
         client.exec_command(f"rm \"{ipa_path}\"")
 
         return local_file_name.name
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         return ""
     finally:
         disconnect_sftp(sftp_client)
 
 
 def dump_app(client: paramiko.SSHClient, app: ios_apps.AppInfo):
-    print(f"Dumping {app.app_bundle}... ", end="")
+    print(f"Dumping {app.app_bundle}... ", end="", flush=True)
     ipa_path = decrypt_app(client, app)
     if ipa_path:
         print("Success")
-        print("Downloading... ", end="")
+        print("Downloading... ", end="", flush=True)
         downloaded = download_app(client, app, ipa_path)
         if downloaded:
             print("File saved as", downloaded)

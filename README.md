@@ -26,6 +26,7 @@ Tested with:
 |-------------------|-------------|-----------------|
 | iPhone XR   (A12) | 15.1        | XinaA15 1.1.6.2 |
 | iPad Mini 5 (A12) | 15.1        | XinaA15 1.1.6.2 |
+
 Unfortunately I don't own a checkm8 compatible device on iOS 15
 
 | Operating system            | Python version |
@@ -126,10 +127,14 @@ Yes:
 5. Done
 
 - **My app keeps failing when dumping, what can I do?**
+
 Unfortunately, there isn't a workaround for those applications,
 so maybe ask anyone else if they can dump that app for you
 
 ### Changelog
+
+### v0.0.2
+- Improved app detection
 
 ### v0.0.1
 - Initial project

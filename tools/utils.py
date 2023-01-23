@@ -1,3 +1,4 @@
+import plistlib
 from pathlib import Path
 
 # General utilities
@@ -33,6 +34,15 @@ def write_file(file_path: Path, data: str) -> bool:
         return False
 
 
+def write_binary_file(file_path: Path, data: bytes) -> bool:
+    try:
+        with open(file_path, "wb") as file:
+            file.write(data)
+            return True
+    except IsADirectoryError:
+        return False
+
+
 def read_file(file_path: Path) -> str:
     try:
         with open(file_path, "r") as file:
@@ -40,6 +50,14 @@ def read_file(file_path: Path) -> str:
     except (UnicodeDecodeError, FileNotFoundError, IsADirectoryError):
         # print("    Cannot read file ", file_path)
         return ""
+
+
+def read_plist_file(file_path: Path) -> dict:
+    try:
+        with open(file_path, "rb") as file:
+            return plistlib.load(file)
+    except (FileNotFoundError, IsADirectoryError):
+        return dict()
 
 
 def enumerate_app_list(apps: list) -> list:
@@ -50,7 +68,7 @@ def enumerate_app_list(apps: list) -> list:
     i = 0
     while i < len(apps_copy):
         if apps_copy[i].app_name:
-            enumerated_apps += f"{i + 1}. {apps_copy[i].app_name}\n"
+            enumerated_apps += f"{i + 1}.\t{apps_copy[i].app_name}\n"
             enumerated_apps_as_options.append(f"{i + 1}")
             i += 1
         else:

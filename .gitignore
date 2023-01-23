@@ -7,3 +7,4 @@ config/*
 error_logs/*
 IPAs/*
 Clutch_troll
+*.png

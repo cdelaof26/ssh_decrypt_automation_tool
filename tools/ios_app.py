@@ -29,7 +29,6 @@ class AppInfo:
     def __init__(self, bundle_id: str, host_plist_path: str):
         self.bundle_id: str = bundle_id
         self.bundle_path: str = host_plist_path
-        self.app_internal_name: str = ""
 
         self.host_plist_path: str = host_plist_path
         self.local_plist_path: Path
