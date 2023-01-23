@@ -1,0 +1,9 @@
+*.DS_Store
+*.pyc
+.DS_Store
+.idea
+cache/*
+config/*
+error_logs/*
+IPAs/*
+Clutch_troll
