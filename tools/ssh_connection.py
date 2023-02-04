@@ -97,6 +97,7 @@ def setup_connection(ask_to_setup_new_idevice=True) -> list:
         except socket.timeout:
             print("Time out!")
             client = None
+            ip = None
             attempts += 1
             continue
         except (paramiko.ssh_exception.NoValidConnectionsError, gaierror):

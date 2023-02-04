@@ -133,6 +133,13 @@ so maybe ask anyone else if they can dump that app for you
 
 ### Changelog
 
+### v0.0.3
+- Minor bug fixes
+- Fixed bug where the script couldn't connect (Time out!)
+  and it keeps trying until "too many attempts" error is raised
+- Fixed bug where the script would crash when attempting 
+  to delete temporary data but there isn't a cache directory
+
 ### v0.0.2
 - Improved app detection
 

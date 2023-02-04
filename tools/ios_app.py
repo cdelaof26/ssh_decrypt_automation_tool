@@ -18,6 +18,9 @@ def is_there_any_cache() -> int:
 
 def clear_cache():
     global LOCAL_CACHE_DIR
+    if not LOCAL_CACHE_DIR.exists():
+        return
+
     for cache in LOCAL_CACHE_DIR.iterdir():
         cache.unlink()
 
