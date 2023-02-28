@@ -190,6 +190,10 @@ so maybe ask anyone else if they can dump that app for you
 
 ### Changelog
 
+### v0.0.4_1
+- Fixed bug where `decrypt method` won't be saved if the option 
+  is selected from the main menu
+
 ### v0.0.4
 - Added support for bfdecrypt
 - Fixed _Windows experience_

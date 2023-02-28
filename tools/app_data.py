@@ -139,7 +139,9 @@ def read_decrypt_method_config():
 
 
 def select_decrypt_utility(option=None):
-    global DECRYPT_METHOD_CONFIG, decrypt_method
+    global CONFIG_DIR, DECRYPT_METHOD_CONFIG, decrypt_method
+    if not CONFIG_DIR.exists():
+        CONFIG_DIR.mkdir()
 
     utils.clear_terminal()
 
