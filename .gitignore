@@ -6,5 +6,6 @@ cache/*
 config/*
 error_logs/*
 IPAs/*
-Clutch_troll
+Clutch_troll*
 *.png
+*.deb

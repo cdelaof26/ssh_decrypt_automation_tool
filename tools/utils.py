@@ -1,11 +1,23 @@
 import plistlib
 from pathlib import Path
+from subprocess import call
 
 # General utilities
 
+CLEAR_CMD = "cls"
+IS_SYSTEM_NT = True
+
+try:
+    from os import uname
+    CLEAR_CMD = "clear"
+    IS_SYSTEM_NT = False
+except ImportError:  # uname doesn't exist in Windows
+    pass
+
 
 def clear_terminal():
-    print(chr(27) + "[2J")
+    global CLEAR_CMD
+    call(CLEAR_CMD, shell=True)
 
 
 # "options" and "options_values" must have the same size
@@ -68,7 +80,8 @@ def enumerate_app_list(apps: list) -> list:
     i = 0
     while i < len(apps_copy):
         if apps_copy[i].app_name:
-            enumerated_apps += f"{i + 1}.\t{apps_copy[i].app_name}\n"
+            enumerated_apps += f"{i + 1}.\t" \
+                               f"{apps_copy[i].app_name}\n"
             enumerated_apps_as_options.append(f"{i + 1}")
             i += 1
         else:
