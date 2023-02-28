@@ -26,6 +26,7 @@ Tested with:
 | iPad Mini 5 (A12) | 15.1        | XinaA15 1.1.6.2 |
 
 Unfortunately I don't own a checkm8 compatible device on iOS 15
+
 This tool should work with root and rootless jailbreaks (bfdecrypt)
 
 | Operating system            | Python version  |
@@ -55,7 +56,7 @@ Python3 for ARM in Windows
 - You'll need `Clutch` or `bfdecrypt` (both if you want).
 - To get `bfdecrypt` to work with iOS 15 (Tested with XinaA15),
   you'll need `libSparkAppList` and [fenfenS' bfdecrypt](https://github.com/fenfenS/bfdecrypt/releases/tag/test)
-- If you already have bfdecrypt working (with AppList), it should just work fine
+- If you already have bfdecrypt working (with AppList), it should work just fine
 
 ### Usage
 
